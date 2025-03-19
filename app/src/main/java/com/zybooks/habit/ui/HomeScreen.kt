@@ -10,7 +10,7 @@ import com.zybooks.habit.viewmodel.HomeViewModel
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, onNavigate: (String, Int?) -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("Habit Tracker", style = MaterialTheme.typography.headlineMedium)
+        Text("Habit Trabit", style = MaterialTheme.typography.headlineMedium)
 
         for ((index, habit) in viewModel.habits.withIndex()) {
             Button(
