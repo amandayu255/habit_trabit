@@ -16,35 +16,29 @@ import com.zybooks.habit.viewmodel.HomeViewModel
 
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, navigate: (String) -> Unit) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)
-    ) {
-        Text(
-            text = "Habit Tracker",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+fun HomeScreen(viewModel: HomeViewModel, onNavigate: (String, String?) -> Unit) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Habit Tracker", style = MaterialTheme.typography.headlineMedium)
 
         // List of habits
-        viewModel.habits.forEach { habit ->
-            HabitItem(habit = habit, onClick = { navigate("AddHabit") })
+        for (habit in viewModel.habits) {
+            Text(
+                text = habit,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .clickable { onNavigate("EditHabit", habit) } // ✅ Navigate to EditHabit
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Add Button
-        Box(
-            modifier = Modifier
-                .size(56.dp)
-                .background(MaterialTheme.colorScheme.primary, shape = CircleShape)
-                .align(Alignment.CenterHorizontally)
-                .clickable { navigate("AddHabit") },
-            contentAlignment = Alignment.Center
+        // Floating Action Button to Add New Habit
+        FloatingActionButton(
+            onClick = { onNavigate("AddHabit", null) }, // ✅ Navigate to AddHabit
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text("+", color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text("+")
         }
     }
 }
