@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.zybooks.habit.ui.AddHabitScreen
 import com.zybooks.habit.ui.EditHabitScreen
+import com.zybooks.habit.ui.HomeScreen
 import com.zybooks.habit.ui.SettingsScreen
 
 @Composable
