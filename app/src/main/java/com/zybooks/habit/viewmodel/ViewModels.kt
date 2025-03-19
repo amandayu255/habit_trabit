@@ -27,4 +27,5 @@ class AddEditHabitViewModel : ViewModel() {
 
 class SettingsViewModel : ViewModel() {
     var notificationsEnabled by mutableStateOf(false)
+    var reminderTime by mutableStateOf("08:00 AM") // Default value
 }
