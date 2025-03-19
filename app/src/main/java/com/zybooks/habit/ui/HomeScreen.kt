@@ -9,13 +9,13 @@ import androidx.compose.ui.unit.dp
 import com.zybooks.habit.viewmodel.HomeViewModel
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, onNavigate: (String, String?) -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel, onNavigate: (String, Int?) -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Habit Tracker", style = MaterialTheme.typography.headlineMedium)
 
-        for (habit in viewModel.habits) {
+        viewModel.habits.forEachIndexed { index, habit ->
             Button(
-                onClick = { onNavigate("EditHabit", habit) },
+                onClick = { onNavigate("EditHabit", index) },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             ) {
                 Text(habit)
