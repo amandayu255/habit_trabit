@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.zybooks.habit.viewmodel.SettingsViewModel
 
-
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
