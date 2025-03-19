@@ -1,8 +1,9 @@
 package com.zybooks.habit.ui
 
 import android.app.DatePickerDialog
-import android.widget.DatePicker
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,11 +24,12 @@ fun AddHabitScreen(
     var startDate by remember { mutableStateOf("") }
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
+    var expanded by remember { mutableStateOf(false) }
 
     // Date Picker
     val datePickerDialog = DatePickerDialog(
         context,
-        { _: DatePicker, year: Int, month: Int, day: Int ->
+        { _, year, month, day ->
             startDate = "$day/${month + 1}/$year"
         },
         calendar.get(Calendar.YEAR),
@@ -36,13 +38,12 @@ fun AddHabitScreen(
     )
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text("Add Habit", fontSize = 24.sp, style = MaterialTheme.typography.headlineSmall)
 
+        // Habit Name Input Field
         OutlinedTextField(
             value = habitName,
             onValueChange = { habitName = it },
@@ -51,14 +52,18 @@ fun AddHabitScreen(
         )
 
         // Frequency Dropdown
-        var expanded by remember { mutableStateOf(false) }
         Box {
             OutlinedTextField(
                 value = frequency,
                 onValueChange = {},
                 label = { Text("Frequency") },
                 readOnly = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    IconButton(onClick = { expanded = !expanded }) {
+                        Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Dropdown")
+                    }
+                }
             )
             DropdownMenu(
                 expanded = expanded,
@@ -76,7 +81,7 @@ fun AddHabitScreen(
             }
         }
 
-        // pick date
+        // Pick Date
         OutlinedButton(
             onClick = { datePickerDialog.show() },
             modifier = Modifier.fillMaxWidth()
@@ -88,7 +93,7 @@ fun AddHabitScreen(
         Button(
             onClick = {
                 if (habitName.isNotBlank()) {
-                    homeViewModel.addHabit(habitName)
+                    homeViewModel.addHabit("$habitName - $frequency - $startDate")
                 }
                 onSave()
             },

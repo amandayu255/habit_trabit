@@ -1,15 +1,14 @@
 package com.zybooks.habit.ui
 
 import android.app.DatePickerDialog
-import android.widget.DatePicker
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zybooks.habit.viewmodel.HomeViewModel
@@ -18,18 +17,21 @@ import java.util.*
 @Composable
 fun EditHabitScreen(
     homeViewModel: HomeViewModel,
-    habitIndex: Int, // Index of the habit being edited
+    habitIndex: Int,
     onSave: () -> Unit
 ) {
-    var habitName by remember { mutableStateOf(homeViewModel.habits[habitIndex]) }
-    var frequency by remember { mutableStateOf("Daily") }
-    var startDate by remember { mutableStateOf("") }
+    val habitParts = homeViewModel.habits[habitIndex].split(" - ")
+    var habitName by remember { mutableStateOf(habitParts.getOrNull(0) ?: "") }
+    var frequency by remember { mutableStateOf(habitParts.getOrNull(1) ?: "Daily") }
+    var startDate by remember { mutableStateOf(habitParts.getOrNull(2) ?: "") }
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
+    var expanded by remember { mutableStateOf(false) }
 
+    // Date Picker
     val datePickerDialog = DatePickerDialog(
         context,
-        { _: DatePicker, year: Int, month: Int, day: Int ->
+        { _, year, month, day ->
             startDate = "$day/${month + 1}/$year"
         },
         calendar.get(Calendar.YEAR),
@@ -38,13 +40,12 @@ fun EditHabitScreen(
     )
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text("Edit Habit", fontSize = 24.sp, style = MaterialTheme.typography.headlineSmall)
 
+        // Habit Name Input Field
         OutlinedTextField(
             value = habitName,
             onValueChange = { habitName = it },
@@ -53,14 +54,18 @@ fun EditHabitScreen(
         )
 
         // Frequency Dropdown
-        var expanded by remember { mutableStateOf(false) }
         Box {
             OutlinedTextField(
                 value = frequency,
                 onValueChange = {},
                 label = { Text("Frequency") },
                 readOnly = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    IconButton(onClick = { expanded = !expanded }) {
+                        Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Dropdown")
+                    }
+                }
             )
             DropdownMenu(
                 expanded = expanded,
@@ -78,7 +83,7 @@ fun EditHabitScreen(
             }
         }
 
-        // pick date
+        // Pick Date
         OutlinedButton(
             onClick = { datePickerDialog.show() },
             modifier = Modifier.fillMaxWidth()
@@ -90,7 +95,7 @@ fun EditHabitScreen(
         Button(
             onClick = {
                 if (habitName.isNotBlank()) {
-                    homeViewModel.habits[habitIndex] = habitName // Update habit in HomeViewModel
+                    homeViewModel.habits[habitIndex] = "$habitName - $frequency - $startDate"
                 }
                 onSave()
             },
@@ -100,3 +105,4 @@ fun EditHabitScreen(
         }
     }
 }
+
