@@ -13,7 +13,7 @@ fun HomeScreen(viewModel: HomeViewModel, onNavigate: (String, Int?) -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Habit Tracker", style = MaterialTheme.typography.headlineMedium)
 
-        viewModel.habits.forEachIndexed { index, habit ->
+        for ((index, habit) in viewModel.habits.withIndex()) {
             Button(
                 onClick = { onNavigate("EditHabit", index) },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -24,11 +24,25 @@ fun HomeScreen(viewModel: HomeViewModel, onNavigate: (String, Int?) -> Unit) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        FloatingActionButton(
-            onClick = { onNavigate("AddHabit", null) },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("+", style = MaterialTheme.typography.headlineSmall)
+            // Button to go to settings
+            Button(
+                onClick = { onNavigate("Settings", null) },
+                modifier = Modifier.weight(1f).padding(end = 8.dp)
+            ) {
+                Text("Settings")
+            }
+
+            // Floating button to add a new habit
+            FloatingActionButton(
+                onClick = { onNavigate("AddHabit", null) },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("+", style = MaterialTheme.typography.headlineSmall)
+            }
         }
     }
 }
